@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from Actions.Students_Actions import (Add_New_Student,Delete_student,Search_student_Grades,Top_3_Average,View_All_students)
+from Actions.Students_Actions import (Add_New_Student,Delete_student,Search_student_Grades,Top_3_Average,View_All_students,Load_From_CSV,Save_To_CSV,General_Average)
 
 
 def display_menu():
@@ -14,33 +14,41 @@ def display_menu():
     print("        Sistema de Control de Estudiantes             ")
     print("=============================================\n")
 
+    print("1. Para Agregar un Estudiante a la Memoria")
+    print("2. Para Eliminar un Estudiante de la Memoria")
+    print("3. Para Consultar Notas (En Memoria)")
+    print("4. Para Ver los Mejores 3 Promedios (En Memoria)")
+    print("5. Para Ver el PROMEDIO GENERAL del Sistema") # <-- Nueva opción 5
+    print("6. Para Ver Todos los Estudiantes (En Memoria)")
+    print("7. IMPORTAR Datos desde el Archivo CSV")
+    print("8. EXPORTAR / GUARDAR Cambios al Archivo CSV")
+    print("9. Para SALIR")
 
-    print("1. Para Agregar un Estudiante")
-    print("2. Para Eliminar un Estudiante")
-    print("3. Para Consultar Notas de un Estudiante")
-    print("4. Para Ver los Mejores 3 Promedios de Estudiantes")
-    print("5. Para Ver Todos los Estudiantes") # <-- Agregada opción 5
-    print("6. Para SALIR")
-
-def menu_run():
+def menu_run(session_students):
     while True:
         display_menu()
 
-        opcion = input("\nSeleccione una opcion del 1 - 6: ")
+        opcion = input("\nSeleccione una opcion del 1 - 9: ")
 
         if opcion == "1":
-            Add_New_Student()
+            Add_New_Student(session_students)
         elif opcion == "2":
-            Delete_student()
-        elif opcion == "3" :
-            Search_student_Grades()
+            Delete_student(session_students)
+        elif opcion == "3":
+            Search_student_Grades(session_students)
         elif opcion == "4":
-            Top_3_Average()
+            Top_3_Average(session_students)
         elif opcion == "5":
-            View_All_students()
-        elif opcion =="6":
-            print("\n Hasta la Próxima!!")
+            General_Average(session_students) # <-- Llamamos a la nueva función
+        elif opcion == "6":
+            View_All_students(session_students)
+        elif opcion == "7":
+            Load_From_CSV(session_students)
+        elif opcion == "8":
+            Save_To_CSV(session_students)
+        elif opcion == "9":      
+            print("\n ¡Hasta la Próxima!!")
             break                    
         else:
-            print("\n Opción no válida. Por favor, elija un número del 1 al 6.")
+            print("\n Opción no válida. Por favor, elija un número del 1 al 9.")
 

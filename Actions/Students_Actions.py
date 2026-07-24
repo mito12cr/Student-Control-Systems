@@ -31,10 +31,8 @@ def request_valid_note(school_subject):
         except ValueError:
             print("Error: Debe Digitar un Número Válido (Ej: 70 - 90).")      
             
-def Add_New_Student():   # FUNCION PARA AGREGAR UN NUEVO ESTUDIANTE
+def Add_New_Student(student_list):   # FUNCION PARA AGREGAR UN NUEVO ESTUDIANTE JUNTO CON LA LISTA EN MEMORIA
     
-    new_student = []  
-
     print("\n ----- Registro de Estudiantes -----")
     while True:
         nombre     = request_valid_text("\nNombre: ")
@@ -47,106 +45,94 @@ def Add_New_Student():   # FUNCION PARA AGREGAR UN NUEVO ESTUDIANTE
         n_sociales = request_valid_note("Sociales")
         n_ciencias = request_valid_note("Ciencias")
         
-        new_student.append([nombre,apellido,seccion,n_español,n_ingles,n_sociales,n_ciencias])
+        student_list.append({
+                            "Nombre":    nombre,
+                            "Apellido":  apellido,
+                            "Seccion":   seccion,
+                            "N_Español": n_español,
+                            "N_Ingles":  n_ingles,
+                            "N_Sociales":n_sociales,
+                            "N_Ciencias":n_ciencias
+                            })
 
         opcion = input("Desea Guardar otro Estudiante?  s/n: ").lower()
 
         if opcion != 's':
                 break
-    export_students_to_csv(new_student)
 
-
-def Delete_student():       # FUNCION PARA ELIMINAR UN ESTUDIANTE
+def Delete_student(student_list):       # FUNCION PARA ELIMINAR UN ESTUDIANTE JUNTO CON LA LISTA EN MEMORIA
     print("\n=============================================")
     print("             Eliminar un Estudiante          ")
     print("=============================================\n")
 
-    students = import_students_from_csv()
-
-    if not students:
-        print("No hay Estudiantes registrados o el que deseas buscar no Existe!!")
+    if not student_list:
+        print("No hay Estudiantes cargados en la memoria actual !!")
         return
     
-    student_to_delete = request_valid_text("Ingrese el nombre del Estudiante que desea Eliminar: ").strip()
-
-    keep_students = []
+    student_to_delete = request_valid_text("Ingrese el nombre del Estudiante que desea Eliminar de la Memoria: ").strip()
     found_to_delete = False
 
-    for row in students:
-        if len(row) == 7:
-            if row[0].strip().lower() == student_to_delete.lower():
-                found_to_delete = True
-                print(f"Estudiante Encontrado y Eliminado: {row[0]} {row[1]} de la Sección: {row[2]}")
-            else:
-                keep_students.append(row)
+    for row in student_list:
+        if 'Nombre' in row and row["Nombre"].strip().lower() == student_to_delete.lower():
+            student_list.remove(row)
+            found_to_delete = True
+            print(f" Estudiante {row['Nombre']} removido de la memoria con éxito.")
+            break
 
-    if found_to_delete:
-        confirmation_to_delete = input("\n Está seguro que desea aplicar los cambios? s/n: ").lower()
-        if confirmation_to_delete == 's':
-            rewrite_all_students_to_csv(keep_students)
-            print("El Archivo CSV se ha Actualizado con Exito!!")
-        else:
-            print("No Se Realizaron los cambios!!!")
-
-    else:
-        print(f"No se ha encontrado ningún estudiante con el nombre de: {student_to_delete}")
+    if not found_to_delete:
+        print(f" No se ha encontrado ningún estudiante en memoria con el nombre de: {student_to_delete}")
 
 
-def Search_student_Grades():    # FUNCION PARA BUSCAR POR NOMBRE A UN ESTUDIANTE
+def Search_student_Grades(student_list):    # FUNCION PARA BUSCAR POR NOMBRE A UN ESTUDIANTE MEDIANTE LA LISTA EN MEMORIA
     print("\n=============================================")
     print("           Buscar Notas de Estudiante        ")
     print("=============================================\n")
 
-    students = import_students_from_csv()
-
-    if not students:
-        print("No hay Estudiantes registrados o el que deseas buscar no Existe!!")
+    if not student_list:
+        print("No hay Estudiantes cargados en la memoria Actual !!")
         return
     
     student_to_search = input("Ingrese el Nombre del Estudiante que deseas encontrar y revisar sus Notas: ").strip()
-
-    find_students = []
-
-    for row in students:
-        if len(row) == 7:
-            if row[0].strip().lower() == student_to_search.lower():
-                find_students.append(row)
+    find_students = [row for row in student_list if "Nombre" in row and row["Nombre"].strip().lower() == student_to_search.lower()]
 
     if not find_students:
-        print(f"No se Encontraron Estudiantes con el nombre de: {student_to_search}")    
+        print(f"No se Encontraron Estudiantes en la memoria con el nombre de: {student_to_search}")    
     else:
         plural = "s" if len(find_students) > 1 else ""
-        print(f"\n Se encontró {len(find_students)} estudiante{plural}:")
+        print(f"\n Se encontró {len(find_students)} estudiante{plural} en memoria:")
         print("-" * 80)
         print(f"{'Nombre':<12} {'Apellido':<12} {'Sección':<8} {'Español':<10} {'Inglés':<10} {'Sociales':<10} {'Ciencias':<10}")
         print("-" * 80)        
 
         for row in find_students:
-            print(f"{row[0]:<12} {row[1]:<12} {row[2]:<8} {row[3]:<10} {row[4]:<10} {row[5]:<10} {row[6]:<10}")
+            print(f"{row['Nombre']:<12} {row['Apellido']:<12} {row['Seccion']:<8} {row['N_Español']:<10} {row['N_Ingles']:<10} {row['N_Sociales']:<10} {row['N_Ciencias']:<10}")
             
         print("-" * 80)      
 
-def Top_3_Average():    # FUNCION PARA MOSTRAR LOS 3 MEJORES PROMEDIOS DE TODOS LOS ESTUDIANTES
+def Top_3_Average(student_list):    # FUNCION PARA MOSTRAR LOS 3 MEJORES PROMEDIOS DE TODOS LOS ESTUDIANTES
     print("\n=============================================")
     print("        Top 3 Mejores Promedios de Alumnos    ")
     print("=============================================\n")
 
-    students = import_students_from_csv()
-
-    if not students:
-        print("No hay Estudiantes Registrados para Calcular los Promedios!!")
+    if not student_list:
+        print("No hay Estudiantes Cargados en la Memoria para Calcular los Promedios!!")
         return
     
     grades_list = []
 
-    for row in students:
-        if len(row) == 7:
+    for row in student_list:
+        if "Nombre" in row:
             try:
-                notes = [float(row[i]) for i in range(3,7)]
+                notes = [
+                    float(row['N_Español']),
+                    float(row['N_Ingles']),
+                    float(row['N_Sociales']),
+                    float(row['N_Ciencias'])
+                ]
                 average = sum(notes) / 4
 
-                name = f"{row[0]} {row[1]}"
-                grades_list.append([name, row[2], round(average, 2)])
+                name = f"{row["Nombre"]} {row["Apellido"]}"
+                grades_list.append([name, row["Seccion"], round(average, 2)])
 
             except ValueError:
                 continue   
@@ -169,24 +155,77 @@ def Top_3_Average():    # FUNCION PARA MOSTRAR LOS 3 MEJORES PROMEDIOS DE TODOS 
     print("-" * 55)  
 
 
-def View_All_students():
+def View_All_students(student_list):
     print("=============================================")
     print(" ----- Total de Estudiantes -----")
     print("=============================================")
 
-    students = import_students_from_csv()
-
-    if not students:
-        print("No se encuentrar Estudiantes Registrados Actualmente en el Sistema Aún!!")
+    if not student_list:
+        print("La Memoria está vacía, debes registrar estudiantes o importar el csv!!")
         return
     
     print(f"{'Nombre':<12} {'Apellido':<12} {'Sección':<8} {'Español':<10} {'Inglés':<10} {'Sociales':<10} {'Ciencias':<10}")
     print("-" * 80)
 
-    for row in students:
-        if len(row) == 7:
-            print(f"{row[0]:<12} {row[1]:<12} {row[2]:<8} {row[3]:<10} {row[4]:<10} {row[5]:<10} {row[6]:<10}")
+    for row in student_list:
+        if "Nombre" in row:
+            print(f"{row['Nombre']:<12} {row['Apellido']:<12} {row['Seccion']:<8} {row['N_Español']:<10} {row['N_Ingles']:<10} {row['N_Sociales']:<10} {row['N_Ciencias']:<10}")
 
     print("-" * 80)
-    print(f"El total de estudiantes: {len(students)}")                 
+    print(f"El total de estudiantes en Sessión: {len(student_list)}")         
 
+def Load_From_CSV(student_list):
+    print("\nCargando Datos Desde Students.csv...")
+    csv_data = import_students_from_csv()
+    if csv_data:
+        student_list.clear()
+        student_list.extend(csv_data)
+        print(f"Se importaron {len(csv_data)} estudiantes a la sesión de memoria !!")
+    else:
+        print("El Archivo CSV está vacío o No Existe en el contexto Actual !!")
+
+def Save_To_CSV(student_list):
+    if not student_list:
+        print("La Memoria está vacía. No hay datos que exportar !!")
+        return
+    print("\nGuardando cambios en el archivo Students.csv...")
+    rewrite_all_students_to_csv(student_list)
+    print("Todo el contenido de la memoria ha sido guardado con éxito!")
+
+def General_Average(student_list):  # Mi funcion de calculo general por estudiante
+    print("\n=============================================")
+    print("          Promedio General del Sistema       ")
+    print("=============================================\n")
+
+    if not student_list:
+        print("No hay Estudiantes cargados en la memoria para calcular el promedio general.")
+        return
+    
+    sum_of_averages = 0  
+    total_valids = 0
+
+    for row in student_list:
+        if "Nombre" in row:
+            try:
+                notes = [
+                    float(row['N_Español']),
+                    float(row['N_Ingles']),
+                    float(row['N_Sociales']),
+                    float(row['N_Ciencias'])
+                ]
+                individual_average = sum(notes) / 4
+                sum_of_averages += individual_average
+                total_valids += 1
+            
+            except ValueError:
+                continue
+
+    if total_valids == 0:
+        print("No se encontraron calificaciones numéricas válidas para promediar.")
+    else:
+        global_average = sum_of_averages / total_valids
+        print(f"Estadísticas Globales del Sistema:")
+        print("-" * 50)
+        print(f" Total de alumnos evaluados: {total_valids}")
+        print(f" Promedio general institucional: {round(global_average, 2)}")
+        print("-" * 50)

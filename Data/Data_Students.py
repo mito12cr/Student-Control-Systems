@@ -4,14 +4,15 @@
 import os
 import csv
 
+FIELDNAMES = ["Nombre","Apellido","Seccion","N_Español","N_Ingles","N_Sociales","N_Ciencias"]
+
 def export_students_to_csv(student_list):
     try:
         existing_file = os.path.exists('Students.csv')
         with open('Students.csv', 'a', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
+            writer = csv.DictWriter(file,fieldnames=FIELDNAMES)
             if not existing_file:
-                headers = ["Nombre","Apellido","Seccion","N_Español","N_Ingles","N_Sociales","N_Ciencias"]
-                writer.writerow(headers)
+                writer.writeheader()
             writer.writerows(student_list)
         print("\nLos Datos han sido Exportado con Éxito al archivo CSV !! ")
 
@@ -23,8 +24,7 @@ def import_students_from_csv():
         return []
     try:
         with open("Students.csv", 'r',encoding='utf-8') as file:
-            reader = csv.reader(file)
-            next(reader)
+            reader = csv.DictReader(file)
             return list (reader)
     except Exception as e:
         print(f"Error al intentar Importar los datos: {e}")
@@ -33,9 +33,8 @@ def import_students_from_csv():
 def rewrite_all_students_to_csv(student_list):
     try:
         with open('Students.csv', 'w', newline='', encoding='utf-8')as file:
-            writer = csv.writer(file)
-            headers = ["Nombre","Apellido","Seccion","N_Español","N_Ingles","N_Sociales","N_Ciencias"]
-            writer.writerow(headers)
+            writer = csv.DictWriter(file,fieldnames=FIELDNAMES)
+            writer.writeheader()
             writer.writerows(student_list)
 
     except Exception as e:
