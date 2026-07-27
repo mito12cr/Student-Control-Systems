@@ -60,7 +60,7 @@ def Add_New_Student(student_list):   # FUNCION PARA AGREGAR UN NUEVO ESTUDIANTE 
         if opcion != 's':
                 break
 
-def Delete_student(student_list):       # FUNCION PARA ELIMINAR UN ESTUDIANTE JUNTO CON LA LISTA EN MEMORIA
+def Delete_student(student_list):       # FUNCION PARA ELIMINAR UN ESTUDIANTE
     print("\n=============================================")
     print("             Eliminar un Estudiante          ")
     print("=============================================\n")
@@ -83,7 +83,7 @@ def Delete_student(student_list):       # FUNCION PARA ELIMINAR UN ESTUDIANTE JU
         print(f" No se ha encontrado ningún estudiante en memoria con el nombre de: {student_to_delete}")
 
 
-def Search_student_Grades(student_list):    # FUNCION PARA BUSCAR POR NOMBRE A UN ESTUDIANTE MEDIANTE LA LISTA EN MEMORIA
+def Search_student_Grades(student_list):    # FUNCION PARA BUSCAR POR NOMBRE A UN ESTUDIANTE
     print("\n=============================================")
     print("           Buscar Notas de Estudiante        ")
     print("=============================================\n")

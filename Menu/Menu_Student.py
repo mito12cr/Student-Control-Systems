@@ -28,25 +28,25 @@ def menu_run(session_students):
     while True:
         display_menu()
 
-        opcion = input("\nSeleccione una opcion del 1 - 9: ")
+        option = input("\nSeleccione una option del 1 - 9: ")
 
-        if opcion == "1":
+        if option == "1":
             Add_New_Student(session_students)
-        elif opcion == "2":
+        elif option == "2":
             Delete_student(session_students)
-        elif opcion == "3":
+        elif option == "3":
             Search_student_Grades(session_students)
-        elif opcion == "4":
+        elif option == "4":
             Top_3_Average(session_students)
-        elif opcion == "5":
+        elif option == "5":
             General_Average(session_students) # <-- Llamamos a la nueva función
-        elif opcion == "6":
+        elif option == "6":
             View_All_students(session_students)
-        elif opcion == "7":
+        elif option == "7":
             Load_From_CSV(session_students)
-        elif opcion == "8":
+        elif option == "8":
             Save_To_CSV(session_students)
-        elif opcion == "9":      
+        elif option == "9":      
             print("\n ¡Hasta la Próxima!!")
             break                    
         else:
